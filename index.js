@@ -14,67 +14,170 @@ const router = express.Router()
 
 router.get('/users', (req, res,) =>{
 
-    User.findAll(function(err, user) {
-      console.log('controller')
-      if (err)
-      res.send(err);
-      console.log('res', user);
-      res.send(user);
+    User.findAll((err, user) => {
+
+        if (err)  return res.json({message:err})
+
+
+        res.json({
+
+            status:200,
+            message: user
+            
+        })
+
     })
-  })
-  
-  
-  router.post('/users', (req, res,) =>{
-     const new_user = req.body;
-      console.log(req.body)
-      User.create(new_user, function(err, user) {
-                  if (err)
-                  res.send(err);
-                  res.json({error:false,message:"user added successfully!",data:user.no});
-              })
-  
-      //handles null error 
-    //  if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-    //       res.status(400).send({ error:true, message: 'Please provide all required field' });
-    //   }else{
-    //       
-    //   }
-  })
-  
 
-  router.put('/users/:no', (req, res,) => {
+})
+  
+  
+  
+router.post('/users', (req, res,) =>{
 
-      if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-          res.status(400).send({ error:true, message: 'Please provide all required field' });
-      }else{
-          User.update(req.params.no, req.body, function(err,user) {
-              if (err)
-              res.send(err);
-              res.json({ error:false, message: 'user successfully updated',data:user });
-          })
-      }
+    const new_user = req.body.No && req.body.Firstname && req.body.Lastname && req.body.Age && req.body.Address && req.body.Mobile && req.body.Status
+              
+
+    if(new_user){
+
+        User.create(req.body, (err, user) => {
+
+            if (err){ 
+
+                res.json({message:err})
+            }
+            else{
+                        
+                res.json({
     
-  })
+                    error:false,
+                    message:"status:200",
+                    data:user
+                })
+            }
+
+        })
+        
+    }
+                 
+    else
+    {
+            
+        res.json({
+
+            message:"Please provide all required field"  
+            
+        })
+    
+    }
+ 
+})
+  
+
+router.put('/users/:no', (req, res,) => {
+
+    const new_user = req.body.Firstname && req.body.Lastname && req.body.Age && req.body.Address && req.body.Mobile && req.body.Status
+
+
+    if(new_user) {
+
+        User.update(req.params.no, req.body, (err,user) => {
+
+            if (err){ 
+
+                res.json({message:err})
+            }
+            else{
+
+                res.json({ error:false, message: 'user successfully updated',data:user });
+            }
+        })
+    }
+    else
+    {
+
+        res.json({
+
+            message:"Please check the table header spelling"
+                
+        })
+    }
+    
+})
   
   
-  router.get('/users/:no', (req, res,) => {
-      User.findById(req.params.no, function(err, user) {
-          if (err)
-          res.send(err);
-          res.json(user);
-      })
-  })
+router.get('/users/:no', (req, res,) => {
+
+
+    User.findById(req.params.no, (err, user)=> {
+
+        if (err) return res.json({message:err}) 
+
+        if(user.length < 1){
+
+            res.json({
+
+                    message:"Don't have this ID",data:user
+
+            })
+
+        }
+        else{
+
+            res.json(user)
+        }
+    
+    })
+   
+})
   
   
 
   
-  router.delete('/users/:no', (req, res,) => {
-    User.delete( req.params.no, function(err, user) {
-      if (err)
-      res.send(err);
-      res.json({ error:false, message: 'user successfully deleted' })
-    })
-  })
+router.delete('/users/:no', (req, res,) => {
+
+    User.findById(req.params.no, (err, user)=> {
+        console.log(user)
+        if (err) 
+        {  
+            res.json({message:err})
+        }
+        
+
+        else if(user.length > 0){
+
+            User.delete( req.params.no,(err) => {
+
+                //find the id before delete
+    
+               if (err){
+
+                   res.json({message:err})
+                
+                }
+                else
+
+                {
+    
+                res.json({ error:false, message: 'user successfully deleted',status:"200" })
+
+                }
+                
+            })
+
+        }
+        else{
+
+        res.json({
+
+            message:"Don't have this ID",
+            status:"400"
+
+        })
+    }
+    
+    })     
+   
+})
 
 
 module.exports = router

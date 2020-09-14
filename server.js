@@ -7,7 +7,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 const index_route = require('./controller/index')
-const nodemon = require('nodemon')
+
 app.use('/api', index_route)
 
 
