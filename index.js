@@ -3,15 +3,6 @@ const User = require('../model/User')
 
 const router = express.Router()
 
-
-// router.get('/users', (req, res, next) => {
-
-//     return res.json({
-//         status: 200,
-//         message: "success"
-//     })
-// })
-
 router.get('/users', (req, res,next) =>{
 
     User.findAll((err, user) => {
@@ -34,8 +25,6 @@ router.post('/users', (req, res,next) =>{
 
     const new_user = req.body.Firstname && req.body.Lastname && req.body.Age 
                      && req.body.Address && req.body.Mobile && req.body.status
-
-                     console.log(new_user)
               
     if(new_user){
 
@@ -51,7 +40,7 @@ router.post('/users', (req, res,next) =>{
     
                     error:false,
                     message:"status:200",
-                    data:user
+                    
                 })
             }
 
@@ -90,7 +79,7 @@ router.put('/users/:no', (req, res,next) => {
                     }
                     else{
             
-                        res.json({ error:false, message: 'user successfully updated',data:user });
+                        res.json({ error:false, message: 'user successfully updated'});
                     }
                 })
             }
@@ -109,9 +98,11 @@ router.put('/users/:no', (req, res,next) => {
     {
         res.json({
 
-            message:"Please check the table header spelling"
+            message:"bad request",
+            status:400
+
                 
-        })
+        }).status(400)
     }
     
 })
@@ -128,9 +119,9 @@ router.get('/users/:no', (req, res,next) => {
             res.json({
 
                 message:"Don't have this ID",
-                data:user
+                status:404
 
-            })
+            }).status(404)
         }
         else{
             res.json({
