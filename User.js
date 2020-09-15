@@ -8,9 +8,9 @@ const connect = require('../config/connect-db')
 module.exports = {
     
 
-create: (newUser, callback)=> { 
+create: (user, callback)=> { 
 
-    connect.query("INSERT INTO user set ?", newUser, callback)
+    connect.query("INSERT INTO user (Firstname,Lastname,Age,Address,Mobile,status) VALUES (?,?,?,?,?,?)",[user.Firstname,user.Lastname,user.Age,user.Address,user.Mobile,user.status,], callback)
             
 },
 
