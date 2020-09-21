@@ -3,32 +3,87 @@ const User = require('../model/User')
 
 const router = express.Router()
 
+router.get('/user', (req, res) => {
+
+    const page = parseInt(req.query.page)
+    const limit = 9
+    
+    const startIndex = (page-1)*limit
+    const endIndex = page *limit
+
+    User.findAll((err, user) => {
+
+        if (err)  return next(err)
+        
+
+        let total = Object.keys(user).length
+        
+        let results = user.slice(startIndex,endIndex)
+
+        results.next= {
+
+            page: page+1,
+            limit: limit,
+            total:total
+        }
+
+        results.previous ={
+            page:page -1,
+            limit: limit
+        }
+        console.log(results)
+        
+        res.render('index', {user: results})
+       
+    })
+  })
+
 router.get('/users', (req, res,next) =>{
 
     User.findAll((err, user) => {
 
         if (err)  return next(err)
 
+        // console.log(user.length)   
 
-        res.json({
+        res.render('index', {user: user})
 
-            status:200,
-            data: user
+        // res.json({
+
+        //     status:200,
+        //     data: user
             
-        })
+        // })
     })
 })
   
   
   
 router.post('/users', (req, res,next) =>{
+    console.log(req.body)
+   
+    let status = req.body.status 
+
+    status[1] == "on" ? status = 1: status = 0
 
     const new_user = req.body.Firstname && req.body.Lastname && req.body.Age 
-                     && req.body.Address && req.body.Mobile && req.body.status
+                     && req.body.Address && req.body.Mobile && req.body.status;
+
+    const data={
+
+        Firstname: req.body.Firstname,
+        Lastname: req.body.Lastname ,
+        Age: req.body.Age ,
+        Address: req.body.Address,
+        Mobile: req.body.Mobile,
+        status: status
+    }
+
+   
               
     if(new_user){
 
-        User.create(req.body, (err, user) => {
+        User.create(data, (err, user) => {
 
             if (err){ 
 
@@ -58,6 +113,8 @@ router.post('/users', (req, res,next) =>{
   
 
 router.put('/users/:no', (req, res,next) => {
+
+    console.log(req.body)
 
     const new_user = req.body.Firstname && req.body.Lastname && req.body.Age && req.body.Address 
                      && req.body.Mobile && req.body.status
@@ -124,12 +181,13 @@ router.get('/users/:no', (req, res,next) => {
             }).status(404)
         }
         else{
-            res.json({
 
-                status:"200",
-                data:user
+            res.render('index',{user:user})
 
-            })
+            //     status:"200",
+            //     data:user
+
+            // })
         }  
     }) 
 })

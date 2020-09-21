@@ -1,0 +1,130 @@
+doctype html
+html  
+    head
+      title title
+      link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css")
+      link(rel="stylesheet", href="/style.css")
+    body
+
+        form(action="/api/users", method="post")
+
+          #myModal.modal
+            .modal-background
+              .modal-card(style="width: 400px")
+                  header.modal-card-head
+                    p.modal-card-title(style="text-align: center") Fill detail below
+                  section.modal-card-body
+                    #inputData
+
+                    .field
+                      .control
+                        input(name="no" id="no" type="text" class="input")
+
+                    .field 
+                      .label 
+                        label First name
+                      .control
+                        input(name="Firstname" id="new_name" type="text" class="input")
+  
+                    .field
+                      .label
+                        label Last name
+                      .control
+                        input(name="Lastname" id="new_lastname" type="text" class="input")
+
+                    .field
+                      .label
+                        label Age
+                      .control
+                        input(name="Age" id="new_age" type="text" class="input")
+
+
+                    .field
+                      .label
+                        label Address
+                      .control
+                        textarea( name="Address" id="new_address" class="textarea" placeholder="Enter text here...")
+
+                    .field
+                      .label
+                        label Mobile
+                      .control
+                        input(name="Mobile" id="new_mobile" type="text" class="input")
+
+                    
+
+                    .field
+                        label(id="status_text" class="label") Status of User
+                    label.switch
+
+                        - const i = 1
+
+                        input(name="status" id="new_status" type="hidden" value="off")
+                        input(name="status" id="new_status" type="checkbox")
+                        
+                        span(class="slider round") #{i}
+
+
+                        
+                  footer.modal-card-foot
+
+                        button(type="submit" class=" button is-primary " id="add_btn" value="Add") Add
+                        button(type="button" class=" button is-primary" id="save_btn" value="Save" onclick="saveRow()") Save
+                        button(type="button" class=" button is-primary is-outlined" id="cancel_btn" value="cancel") Cancel
+
+
+        .container
+          .card(style="height: 600px; margin-top: 50px;")
+            .card-content
+
+                button(id="myBtn" class="button is-primary" style="float: right;margin-right: 39px;") Add User
+
+                
+                .table-cointainer
+                
+                    table(id="table_data" class="table is-fullwidth" style="text-align: center;")
+                      thead
+                        th No
+                        th Firstname
+                        th Lastname
+                        th Age
+                        th Address
+                        th Mobile
+                        th Status
+                        th Manage
+                      tbody#table_tbody
+                      
+                      for i in user
+                        tr
+                          td= i.No
+                          td= i.Firstname
+                          td= i.Lastname
+                          td= i.Age
+                          td= i.Address
+                          td= i.Mobile
+                          td= i.status
+                          td 
+                            
+                              button(type="button" onclick="editRow(this)") edit
+                            
+                              button(type="button" onclick="delRow(this)") delete
+
+
+
+
+                nav(class="pagination is-centered" role="navigation" aria-label="pagination" style="margin-top: 40px;")
+                  a(class="pagination-previous" id="pre") Previous
+
+                  ul(class="pagination-list" id="pagination-wrapper")
+                    //- li
+                    //-   a(class="pagination-link" aria-label="Goto page 1") 1
+
+                  a(class="pagination-next" id="next") Next page
+                          
+        script(src="")   
+                      
+          include ../public/script.js   
+
+          cont new_user = #{user} 
+
+                              
